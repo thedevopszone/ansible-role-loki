@@ -1,0 +1,14 @@
+---
+- name: user | Creating Loki Group
+  ansible.builtin.group:
+    name: "{{ loki_user_info['group'] }}"
+  become: true
+
+- name: user | Creating Loki User
+  ansible.builtin.user:
+    name: "{{ loki_user_info['user'] }}"
+    groups: "{{ loki_user_info['group'] }}"
+    state: present
+    system: true
+    append: true
+  become: true
