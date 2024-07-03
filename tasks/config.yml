@@ -1,0 +1,11 @@
+---
+- name: config | Configuring Loki
+  ansible.builtin.template:
+    src: loki.yml.j2
+    dest: "{{ loki_config_file }}"
+    owner: "{{ loki_user_info['user'] }}"
+    group: "{{ loki_user_info['group'] }}"
+    mode: u=rw,g=r,o=r
+  notify:
+    - restart loki
+  become: true
