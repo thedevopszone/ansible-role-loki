@@ -1,0 +1,14 @@
+---
+loki_user_info:
+  group: loki
+  user: loki
+
+loki_version: 2.9.8
+loki_download_dir: loki-linux-amd64
+loki_download_url: https://github.com/grafana/loki/releases/download/v{{ loki_version }}/{{ loki_download_dir }}.zip
+
+loki_dir: /etc/loki
+loki_config_file: "{{ loki_dir }}/loki.yml"
+loki_bin_dir: /opt/loki
+
+prometheus_local_storage: /data/alertmanager
