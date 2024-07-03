@@ -1,0 +1,50 @@
+---
+- name: install | Downloading Loki {{ loki_version }}
+  ansible.builtin.get_url:
+    url: "{{ loki_download_url }}"
+    dest: /tmp/
+  become: true
+
+- name: install | Extracting Loki
+  ansible.builtin.unarchive:
+    src: "/tmp/{{ loki_download_dir }}.zip"
+    dest: /tmp/
+    remote_src: true
+  become: true
+
+- name: create Loki config dir
+  ansible.builtin.file:
+    path: "{{ loki_dir }}"
+    state: directory
+    owner: "{{ loki_user_info['user'] }}"
+    group: "{{ loki_user_info['group'] }}"
+
+- name: create Loki dir for binaries
+  ansible.builtin.file:
+    path: "{{ loki_bin_dir }}"
+    state: directory
+    owner: "{{ loki_user_info['user'] }}"
+    group: "{{ loki_user_info['group'] }}"
+
+- name: copy binaries
+  ansible.builtin.copy:
+    src: "/tmp/{{ item }}"
+#    dest: "{{ loki_bin_dir }}/{{ item }}"
+    dest: "{{ loki_bin_dir }}/loki"
+    remote_src: true
+    mode: '0774'
+    owner: "{{ loki_user_info['user'] }}"
+    group: "{{ loki_user_info['group'] }}"
+  loop:
+    - loki-linux-amd64
+  become: true
+
+- name: cleanup directory
+  ansible.builtin.file:
+    path: "/tmp/{{ loki_download_dir }}"
+    state: absent
+
+- name: cleanup files
+  ansible.builtin.file:
+    path: "/tmp/{{ loki_download_dir }}.zip"
+    state: absent
